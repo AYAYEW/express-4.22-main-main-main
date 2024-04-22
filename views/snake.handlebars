@@ -65,19 +65,22 @@
                 snake.changeDirection(direction);
             });
       
-            function saveScore(score) {
+            function saveScore(score_game) {
                 console.log("Score saved:", score);
             }
 
             
-            function saveScoreToDatabase(score) {
 
-    fetch(`/competitions/scoreUpdate/${user_id}`, {
+
+
+            function saveScoreToDatabase(score_game) {
+
+    fetch(`/competitions/scoregameUpdate/${user_id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ score: score })
+        body: JSON.stringify({ score_game: score })
     })
     .then(response => {
         if (!response.ok) {
@@ -102,8 +105,8 @@
  if (snake.eat(fruit)) {
     fruit.pickLocation();
     score++;
-    updateScoreDisplay(score); // Update the score display
-    saveScoreToDatabase(score); // Save score to the database
+    updateScoreDisplay(score_game); // Update the score display
+    saveScoreToDatabase(score_game); // Save score to the database
 }
 
 

@@ -195,8 +195,8 @@ router.post("/scoreUpdate/:id", authRequired, function (req, res, next) {
 
 });
 
-// GET /competitions/score/:id
-router.get("/score/:id", authRequired, function (req, res, next) {
+// GET /competitions/score_game/:id
+router.get("/score_game/:id", authRequired, function (req, res, next) {
     // do validation
     const result = schema_id.validate(req.params);
     if (result.error) {
@@ -209,18 +209,18 @@ router.get("/score/:id", authRequired, function (req, res, next) {
     ORDER BY a.score`);
     const dbResult = stmt.all(req.params.id);
     if (!dbResult) {
-        throw new Error("Nema rezultata za traženi ID natjecanja");
+        throw new Error("AAAAAAAAAAAAAAAAAAAAAAA!!!!!!!!!");
     }
     res.render("main", { scoreData: dbResult });
 });
 
 
-router.post("/scoreUpdate/:id", authRequired, function (req, res, next) {
+router.post("/score_gameUpdate/:id", authRequired, function (req, res, next) {
     const score = req.body.score;
     const competitionId = req.params.id;
 
-    const stmt = db.prepare("UPDATE signed_up SET score = ? WHERE userid = ? AND competitionid = ?;");
-    const updateResult = stmt.run(score, req.user.sub, competitionId);
+    const stmt = db.prepare("UPDATE signed_up SET score_game = ? WHERE userid = ? AND competitionid = ?;");
+    const updateResult = stmt.run(score_game, req.user.sub, competitionId);
 
     if (updateResult.changes && updateResult.changes === 1) {
         res.sendStatus(200); 
