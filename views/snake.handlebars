@@ -64,10 +64,50 @@
                 const direction = e.key.replace('Arrow', '');
                 snake.changeDirection(direction);
             });
-
+      
             function saveScore(score) {
                 console.log("Score saved:", score);
             }
+
+            
+            function saveScoreToDatabase(score) {
+
+    fetch(`/competitions/scoreUpdate/${user_id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ score: score })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        console.log('Score saved to database successfully');
+    })
+    .catch(error => {
+        console.error('There was a problem saving the score:', error.message);
+    });
+}
+ 
+
+
+
+
+
+
+
+
+
+ if (snake.eat(fruit)) {
+    fruit.pickLocation();
+    score++;
+    updateScoreDisplay(score); // Update the score display
+    saveScoreToDatabase(score); // Save score to the database
+}
+
+
+
 
             function Snake() {
                 this.x = canvas.width / 2;

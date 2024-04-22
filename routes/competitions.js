@@ -195,6 +195,37 @@ router.post("/scoreUpdate/:id", authRequired, function (req, res, next) {
 
 });
 
+// GET /competitions/score/:id
+router.get("/score/:id", authRequired, function (req, res, next) {
+    // do validation
+    const result = schema_id.validate(req.params);
+    if (result.error) {
+        throw new Error("Neispravan poziv");
+    }
+    const stmt = db.prepare(`
+    SELECT a.id, u.name AS natjecatelj, a.score, c.name AS natjecanje, a.competitionid
+    FROM users u, signed_up a, competitions c
+    WHERE a.userid = u.id AND a.competitionid = c.id AND c.id = ?
+    ORDER BY a.score`);
+    const dbResult = stmt.all(req.params.id);
+    if (!dbResult) {
+        throw new Error("Nema rezultata za traženi ID natjecanja");
+    }
+    res.render("main", { scoreData: dbResult });
+});
+router.post("/scoreUpdate/:id", authRequired, function (req, res, next) {
+    const score = req.body.score;
+    const competitionId = req.params.id;
+
+    const stmt = db.prepare("UPDATE signed_up SET score = ? WHERE userid = ? AND competitionid = ?;");
+    const updateResult = stmt.run(score, req.user.sub, competitionId);
+
+    if (updateResult.changes && updateResult.changes === 1) {
+        res.sendStatus(200); 
+    } else {
+        res.status(500).send("Failed to update score"); 
+    }
+});
 
 
 
