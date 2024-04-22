@@ -213,6 +213,8 @@ router.get("/score/:id", authRequired, function (req, res, next) {
     }
     res.render("main", { scoreData: dbResult });
 });
+
+
 router.post("/scoreUpdate/:id", authRequired, function (req, res, next) {
     const score = req.body.score;
     const competitionId = req.params.id;
